@@ -13,6 +13,7 @@ library(shiny)
 fluidPage(
   
   sliderInput("num", "Choose a Number", 1, 100, 50), 
+  actionButton("go", "Update - Display"),
   plotOutput("hist"),
   verbatimTextOutput("txt")
 )
