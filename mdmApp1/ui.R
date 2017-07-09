@@ -11,9 +11,12 @@ library(shiny)
 
 # Define UI for application that draws a histogram
 fluidPage(
+  # change from having one action button to having 2 action buttons. 
+  # change the display label on the actionButtons. 
   
   sliderInput("num", "Choose a Number", 1, 100, 50), 
-  actionButton("go", "Update - Display"),
+  actionButton("norm", "Normal Distribution"),
+  actionButton("unif", "Uniform Distribution"),
   plotOutput("hist"),
   verbatimTextOutput("txt")
 )
