@@ -14,9 +14,12 @@ fluidPage(
   # change from having one action button to having 2 action buttons. 
   # change the display label on the actionButtons. 
   
+ 
+  # input 
   sliderInput("num", "Choose a Number", 1, 100, 50), 
   actionButton("norm", "Normal Distribution"),
   actionButton("unif", "Uniform Distribution"),
+  #output
   plotOutput("hist"),
   verbatimTextOutput("txt")
 )
