@@ -8,18 +8,26 @@
 #
 
 library(shiny)
+require(quantmod)
+require(dplyr)
+require(reshape2)
+require(tidyquant)
+require(ggplot2)
+require(Hmisc)
 
 # Define UI for application that draws a histogram
 fluidPage(
-  # change from having one action button to having 2 action buttons. 
-  # change the display label on the actionButtons. 
   
- 
-  # input 
-  sliderInput("num", "Choose a Number", 1, 100, 50), 
-  actionButton("norm", "Normal Distribution"),
-  actionButton("unif", "Uniform Distribution"),
-  #output
-  plotOutput("hist"),
-  verbatimTextOutput("txt")
+  
+  
+  sidebarLayout(
+    sidebarPanel(
+      textInput("varSym", "Input Listed Security Symbol"),
+      actionButton("varAction", "Retrieve Information")
+    ), # sidebarPanel
+    mainPanel(
+      plotOutput("plotCandle"),
+      verbatimTextOutput("sum")
+    )
+  ) # sidebarLayout
 )

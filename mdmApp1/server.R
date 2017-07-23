@@ -12,30 +12,29 @@ library(shiny)
 # Define server logic required to draw a histogram
 function(input, output) {
    
-#  data <- reactive({rnorm(input$num)})
-# using event reactive waits for user to press the button before redrawing the histogram 
- 
-#  comment this out to to use reactiveValues and observeEvent 
-#  to diplay different values based on slider input depending on 
-#  which button is pressed, uniform distribution or normal distribution 
-#  data <- eventReactive(input$go, {
-#    rnorm(input$num)
-#  })
-
-# first, default to normal distribution with 50 values
-  rv <- reactiveValues(data = rnorm(50))
+  funcPlotCandleSMA <- function(inDf, inSym){
+    
+    gp <- inDf %>% ggplot(aes(x = date, y = close)) +
+      geom_barchart(aes(open = open, high = high, low = low, close = close)) +
+      geom_ma(ma_fun = SMA, n = 20, color = "green", linetype = 5, size = 1.25) +
+      geom_ma(ma_fun = SMA, n = 50, linetype = 5, size = 1.25) +
+      geom_ma(ma_fun = SMA, n = 200, color = "red", size = 1.25) + 
+      labs(title = sprintf("%s Candlestick Chart", inSym), subtitle = "20, 50 and 200-Day SMA", y = "Closing Price", x = "Date") + 
+      coord_x_date(xlim = c(max(inDf$date) - weeks(48), max(inDf$date)), ylim = c(min(inDf$low), max(inDf$high))) +
+      theme_tq() 
+    
+    return(gp)
+    
+  }
   
-  observeEvent(input$norm, {rv$data <- rnorm(input$num)})
-  observeEvent(input$unif, {rv$data <- runif(input$num)})
-  
-  output$hist <- renderPlot( {
-    hist(rv$data)
+  tdfStockSymData <- eventReactive( input$varAction, {tq_get(input$varSym, get = "stock.prices", from = "2016-01-01")} )
+  output$plotCandle <- renderPlot({
+    funcPlotCandleSMA(tdfStockSymData(), input$varSym)
   })
   
-  output$txt <- renderPrint( {
-    summary(rv$data)
+  output$sum <- renderPrint({
+    summary(tdfStockSymData())
   })
-  
 }
 
 
