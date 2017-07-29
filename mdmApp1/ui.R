@@ -18,16 +18,27 @@ require(Hmisc)
 # Define UI for application that draws a histogram
 fluidPage(
   
-  
-  
-  sidebarLayout(
-    sidebarPanel(
-      textInput("varSym", "Input Listed Security Symbol"),
-      actionButton("varAction", "Retrieve Information")
-    ), # sidebarPanel
-    mainPanel(
-      plotOutput("plotCandle"),
-      verbatimTextOutput("sum")
-    )
-  ) # sidebarLayout
+  tabsetPanel(
+    tabPanel("Equity Information", 
+              sidebarLayout(
+                sidebarPanel(
+                  textInput("varSym", "Input Listed Security Symbol"),
+                  actionButton("varAction", "Retrieve Information")
+                ), # sidebarPanel
+            mainPanel(
+            plotOutput("plotCandle"),
+            verbatimTextOutput("sum")
+          )#mainPanel
+        ) # sidebarLayout
+      ), # tabPanel
+    tabPanel("Option Information",
+             sidebarLayout(
+               sidebarPanel(
+                textInput("optVal", "Input Option"),
+                actionButton("varOptAction", "Retrieve Option Information")
+               ), # sidebarPanel
+              mainPanel()
+             ) # sidebarLayout
+            ) # tabPanel
+    ) #tabsetPanel
 )

@@ -9,9 +9,9 @@
 
 library(shiny)
 
-# Define server logic required to draw a histogram
+
 function(input, output) {
-   
+  # function to take data and product a candlestick chart with 20, 50, 100 day moving averages 
   funcPlotCandleSMA <- function(inDf, inSym){
     
     gp <- inDf %>% ggplot(aes(x = date, y = close)) +
@@ -27,14 +27,21 @@ function(input, output) {
     
   }
   
+  # get the data using tidyquant (may have to switch to quantMod if USDP does not upgrade to R version 3)
+  # embed into reactive function to get symbol after the event button is pressed on the UI 
   tdfStockSymData <- eventReactive( input$varAction, {tq_get(input$varSym, get = "stock.prices", from = "2016-01-01")} )
+  # create output candlestick chart 
   output$plotCandle <- renderPlot({
     funcPlotCandleSMA(tdfStockSymData(), input$varSym)
   })
   
+  # print output data TODO - tidy this up 
   output$sum <- renderPrint({
     summary(tdfStockSymData())
   })
+  
+  listOptionChain <- eventReactive( input$varAction, {getOptionChain(input$varSym, Exp = NULL)})
+  
 }
 
 
