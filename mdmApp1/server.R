@@ -40,7 +40,56 @@ function(input, output) {
     summary(tdfStockSymData())
   })
   
-  listOptionChain <- eventReactive( input$varAction, {getOptionChain(input$varSym, Exp = NULL)})
+  ##### Option Chain ######
+  convertOptionChain <- function(inList) {
+    
+    for(i in seq_along(inList)) {
+      dfLoopSampleCalls <- inList[[i]]$calls
+      dfLoopSampleCallsNames <- data.frame(row.names(dfLoopSampleCalls), stringsAsFactors = FALSE)
+      colnames(dfLoopSampleCallsNames) <- "OptionSym"
+      dfCalls <- bind_cols(dfLoopSampleCallsNames,dfLoopSampleCalls)
+      if (i == 1)
+      {
+        dfCallsToBind <- dfCalls
+      }
+      else
+      {
+        dfCallsToBind <- bind_rows(dfCalls,dfCallsToBind)
+      }
+      
+      dfLoopSamplePuts <- inList[[i]]$puts
+      dfLoopSamplePutsNames <- data.frame(row.names(dfLoopSamplePuts), stringsAsFactors = FALSE)
+      colnames(dfLoopSamplePutsNames) <- "OptionSym"
+      dfPuts <- bind_cols(dfLoopSamplePutsNames, dfLoopSamplePuts)
+      
+      if (i==1)
+      {
+        dfPutsToBind <- dfPuts
+      }
+      else
+      {
+        dfPutsToBind <- bind_rows(dfPuts,dfPutsToBind)
+      }
+      
+      
+    }
+    
+    dfOut <- bind_rows(dfCallsToBind,dfPutsToBind)
+    
+    
+    return(dfOut)
+
+  }
+  
+#  listOptionChain <- eventReactive( input$varAction, {getOptionChain(input$varSym, Exp = NULL)})
+  dfOptionChain <- eventReactive( input$varAction, {convertOptionChain(getOptionChain(input$varSym, Exp = NULL))})
+  
+  
+  output$myOptionChainTable = renderDataTable(
+    {dfOptionChain()}
+  )
+  
+
   
 }
 

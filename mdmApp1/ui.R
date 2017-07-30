@@ -19,6 +19,7 @@ require(Hmisc)
 fluidPage(
   
   tabsetPanel(
+    ################ Equity information panel #############################
     tabPanel("Equity Information", 
               sidebarLayout(
                 sidebarPanel(
@@ -31,7 +32,17 @@ fluidPage(
           )#mainPanel
         ) # sidebarLayout
       ), # tabPanel
-    tabPanel("Option Information",
+    
+    ############### Option Chain ###########################################
+    tabPanel("Option Chain",
+             basicPage(
+               h2('The Option Chain'),
+               dataTableOutput('myOptionChainTable')
+             )
+    ),
+    
+    ############### Option Information #####################################
+    tabPanel("Option Informaton",
              sidebarLayout(
                sidebarPanel(
                 textInput("optVal", "Input Option"),
